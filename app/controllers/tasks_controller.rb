@@ -4,6 +4,21 @@ class TasksController < ApplicationController
     @task = Task.new
   end
 
+  def edit
+    @task = Task.find(params[:id])
+  end
+
+  def update
+    @task = Task.find(params[:id])
+    respond_to do |format|
+      if @task.update(task_params)
+        format.html { redirect_to tasks_url, notice: 'Task was successfully updated' }
+      else
+        format.html { render :edit, status: :unprocessable_entity }
+      end
+    end
+  end
+
   def create
     @task = Task.new(task_params)
 
@@ -21,7 +36,13 @@ class TasksController < ApplicationController
     @task = Task.find(params[:id])
     @task.update(completed: params[:completed])
 
-    render json: { message: "Success" }
+    render json: { message: 'Success' }
+  end
+
+  def destroy
+    @task = Task.find(params[:id])
+    @task.destroy
+    redirect_to tasks_url, notice: 'Task was successfully destroyed.'
   end
 
   private
